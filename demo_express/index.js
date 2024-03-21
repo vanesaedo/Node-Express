@@ -2,6 +2,13 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+
+const booksRoutes = require("./routes/books.routes");
+const productsRoutes = require("./routes/products.routes");
+const entriesRoutes = require("./routes/entries.routes");
+
+
+
 //Middlewares
 app.use(express.json()); // Para parsear el body de las peticiones
 
@@ -45,7 +52,7 @@ app.get("/books/:title?", (req, res) => {
 // GET http://localhost:3000/books/quijote
 // GET http://localhost:3000/books/
 // GET http://localhost:3000/books/celestina
-app.get("/books/:title?", (req, res) => {
+app.get("api/books/:title?", (req, res) => {
   console.log(req.params.title);
 
   if (req.params.title) {
@@ -109,7 +116,7 @@ app.get("/books/:title?", (req, res) => {
   }
 });
 
-// POST http://localhost:3000/books
+// POST http://localhost:3000/api/books
 /* {
   "title": "Don Quijote de la Mancha",
   "author":"Miguel de Cervantes",
@@ -118,7 +125,7 @@ app.get("/books/:title?", (req, res) => {
   "description": "en un lugar de la mancha..."
 } 
 */
-app.post("/books", (req, res) => {
+app.post("api/books", (req, res) => {
   console.log(req.body);
   const book = req.body;
   // Código para guardar en la BBDD
@@ -134,7 +141,7 @@ app.post("/books", (req, res) => {
   });
 });
 // PUT http://localhost:3000/books
-app.put("/books/:title?", (req, res) => {
+app.put("api/books/:title?", (req, res) => {
   const title = req.params.title;
   res.status(201).send("Se ha editado un libro: " + title);
 });
@@ -142,7 +149,7 @@ app.put("/books/:title?", (req, res) => {
 // DELETE http://localhost:3000/books/quijote
 // DELETE http://localhost:3000/books/hamlet
 // DELETE http://localhost:3000/books
-app.delete("/books/:title?", (req, res) => {
+app.delete("api/books/:title?", (req, res) => {
   const title = req.params.title;
 
   if (title) {
@@ -154,7 +161,16 @@ app.delete("/books/:title?", (req, res) => {
   }
 });
 
+
+//API
+app.use('/api/books',booksRoutes);
+app.use('/api/products',productsRoutes);
+app.use('/api/entries',entriesRoutes);
+
+
 // http://localhost:3000
 app.listen(port, () => {
   console.log(`Example app listening on  http://localhost:${port}`);
 });
+
+
